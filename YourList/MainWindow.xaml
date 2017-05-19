@@ -1,0 +1,444 @@
+﻿<Window
+    x:Class="YourList.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:YourList"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:viewmodels="clr-namespace:YourList.ViewModels"
+    Title="YourList — твой список задач"
+    Width="1000"
+    Height="600"
+    MinWidth="835"
+    MinHeight="325"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{StaticResource MaterialDesignFont}"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Close" Executed="CloseCommandHandler" />
+    </Window.CommandBindings>
+
+    <Grid ShowGridLines="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <materialDesign:Chip Width="230" Margin="10,14,0,14">
+                <materialDesign:Chip.Icon>
+                    <Image Name="Avatar" />
+                </materialDesign:Chip.Icon>
+                <materialDesign:Chip.Content>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Name="Login" />
+                    </StackPanel>
+                </materialDesign:Chip.Content>
+            </materialDesign:Chip>
+        </Grid>
+        <materialDesign:ColorZone
+            Grid.Row="0"
+            Grid.Column="1"
+            Height="60"
+            Mode="PrimaryLight">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="15,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignTitleTextBlock}">
+                    Inbox
+                </TextBlock>
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <materialDesign:PopupBox
+                        PlacementMode="BottomAndAlignRightEdges"
+                        StaysOpen="True"
+                        ToolTip="Settings">
+                        <StackPanel>
+                            <ScrollViewer
+                                Grid.Row="1"
+                                Margin="0,12,0,0"
+                                HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Swatches, Mode=OneTime}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </ScrollViewer>
+
+                            <Button Content="Nice Popup" />
+                            <Button Content="Can't Touch This" IsEnabled="False" />
+                            <Separator />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <ToggleButton
+                                    Grid.Column="1"
+                                    Margin="8,0,16,0"
+                                    Command="{Binding ToggleBaseCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+                                <Label Grid.Column="0">Light</Label>
+                                <Label Grid.Column="2">Dark</Label>
+                            </Grid>
+
+                        </StackPanel>
+                    </materialDesign:PopupBox>
+                    <Button
+                        Padding="0"
+                        Command="ApplicationCommands.Close"
+                        Style="{DynamicResource MaterialDesignToolButton}">
+                        <materialDesign:PackIcon
+                            Kind="ExitToApp"
+                            Style="{StaticResource ButtonSettings}"
+                            ToolTip="Sign out" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </materialDesign:ColorZone>
+        <Grid
+            Name="StackPanelTask"
+            Grid.Row="1"
+            Grid.Column="1">
+            <materialDesign:ColorZone
+                Grid.Row="1"
+                Grid.Column="1"
+                Padding="16"
+                Mode="PrimaryMid">
+                <DockPanel>
+                    <StackPanel materialDesign:RippleAssist.IsCentered="True" Orientation="Horizontal">
+                        <materialDesign:ColorZone
+                            Padding="8,4,8,4"
+                            Panel.ZIndex="1"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                            CornerRadius="5"
+                            Mode="Standard">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox
+                                    Grid.Column="1"
+                                    MinWidth="260"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    materialDesign:HintAssist.Hint="Search task..."
+                                    materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                    BorderThickness="0" />
+                                <Button Grid.Column="2" Style="{DynamicResource MaterialDesignToolButton}">
+                                    <materialDesign:PackIcon
+                                        Margin="8,0,0,0"
+                                        Kind="Microphone"
+                                        Opacity=".56" />
+                                </Button>
+                            </Grid>
+                        </materialDesign:ColorZone>
+                        <Button
+                            Margin="8,0,0,0"
+                            Panel.ZIndex="0"
+                            Style="{DynamicResource MaterialDesignToolForegroundButton}">
+                            <materialDesign:PackIcon
+                                Width="25"
+                                Height="25"
+                                Kind="Magnify" />
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+            <materialDesign:DialogHost
+                Name="DialogHost"
+                Grid.Row="0"
+                Margin="0,72,0,0">
+                <materialDesign:DialogHost.DialogContent>
+                    <StackPanel Width="300" Margin="25">
+                        <AdornerDecorator>
+                            <Grid ShowGridLines="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ClipboardText" Style="{StaticResource TaskListIcon}" />
+                                    <TextBlock VerticalAlignment="Bottom">Title:</TextBlock>
+                                </StackPanel>
+                                <TextBox
+                                    x:Name="InputTitle"
+                                    Grid.Row="0"
+                                    Grid.Column="1">
+                                    <TextBox.Text>
+                                        <Binding Path="title" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <ExceptionValidationRule />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Calendar" Style="{StaticResource TaskListIcon}" />
+                                    <TextBlock Style="{StaticResource TaskListTextBlock}">Due date:</TextBlock>
+                                </StackPanel>
+                                <DatePicker
+                                    x:Name="FutureDatePicker"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Width="100"
+                                    Margin="0,16,0,0"
+                                    HorizontalAlignment="Left"
+                                    materialDesign:HintAssist.Hint="Future Date" />
+                                <StackPanel
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ClockAlert" Style="{StaticResource TaskListIcon}" />
+                                    <TextBlock Style="{StaticResource TaskListTextBlock}">Reminder:</TextBlock>
+                                </StackPanel>
+                                <DatePicker
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Width="120"
+                                    Margin="0,16,0,0"
+                                    HorizontalAlignment="Left"
+                                    materialDesign:HintAssist.Hint="Locale Date" />
+                                <materialDesign:TimePicker Grid.Row="3" Grid.Column="1" />
+                                <StackPanel
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Ticket" Style="{StaticResource TaskListIcon}" />
+                                    <TextBlock Style="{StaticResource TaskListTextBlock}">Difficult:</TextBlock>
+                                </StackPanel>
+                                <ComboBox
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,0"
+                                    materialDesign:HintAssist.Hint="choose difficult...">
+                                    <ComboBoxItem>Extrimal</ComboBoxItem>
+                                    <ComboBoxItem>Hard</ComboBoxItem>
+                                    <ComboBoxItem>Normal</ComboBoxItem>
+                                    <ComboBoxItem>Easy</ComboBoxItem>
+                                </ComboBox>
+                                <StackPanel
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                    Margin="0,5,0,0"
+                                    Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Pen" Style="{StaticResource TaskListIcon}" />
+                                    <TextBlock Style="{StaticResource TaskListTextBlock}">Note:</TextBlock>
+                                </StackPanel>
+                                <TextBox
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,0" />
+                            </Grid>
+                        </AdornerDecorator>
+                        <StackPanel
+                            Margin="0,30,0,0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Button
+                                Margin="0,8,8,0"
+                                Command="materialDesign:DialogHost.CloseDialogCommand"
+                                IsDefault="True">
+                                <Button.CommandParameter>
+                                    <system:Boolean>True</system:Boolean>
+                                </Button.CommandParameter>
+                                <Button.CommandBindings>
+                                    <CommandBinding Command="materialDesign:DialogHost.CloseDialogCommand" />
+                                </Button.CommandBindings>
+                                Add
+                            </Button>
+                            <Button
+                                Margin="0,8,8,0"
+                                Command="materialDesign:DialogHost.CloseDialogCommand"
+                                IsCancel="True">
+                                <Button.CommandParameter>
+                                    <system:Boolean>False</system:Boolean>
+                                </Button.CommandParameter>
+                                Cancel
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:DialogHost.DialogContent>
+                <Border
+                    MinHeight="153"
+                    BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                    BorderThickness="1"
+                    ClipToBounds="True">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" MinHeight="48" />
+                        </Grid.RowDefinitions>
+                        <DataGrid
+                            HorizontalAlignment="Stretch"
+                            materialDesign:DataGridAssist.CellPadding="10"
+                            materialDesign:DataGridAssist.ColumnHeaderPadding="4"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserReorderColumns="False"
+                            CanUserResizeColumns="False"
+                            CanUserSortColumns="True"
+                            ColumnHeaderHeight="30"
+                            ColumnWidth="*"
+                            FrozenColumnCount="2"
+                            GridLinesVisibility="Horizontal"
+                            HorizontalGridLinesBrush="{DynamicResource PrimaryHueLightBrush}"
+                            IsReadOnly="False"
+                            ItemsSource="{Binding TaskList}"
+                            Style="{StaticResource DataGrid}">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn
+                                    Width="40"
+                                    MinWidth="40"
+                                    Binding="{Binding Path=Done}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"
+                                    ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" />
+                                <materialDesign:MaterialDataGridTextColumn
+                                    MinWidth="312"
+                                    Binding="{Binding Path=Title}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"
+                                    Header="Title"
+                                    MaxLength="40">
+                                    <materialDesign:MaterialDataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+                                    </materialDesign:MaterialDataGridTextColumn.ElementStyle>
+                                </materialDesign:MaterialDataGridTextColumn>
+                                <materialDesign:MaterialDataGridComboBoxColumn
+                                    MinWidth="72"
+                                    Header="Difficult"
+                                    SelectedItemBinding="{Binding Path=Difficult}">
+                                    <materialDesign:MaterialDataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+                                    </materialDesign:MaterialDataGridComboBoxColumn.ElementStyle>
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <col:ArrayList>
+                                            <system:String>Extreme</system:String>
+                                            <system:String>Hard</system:String>
+                                            <system:String>Normal</system:String>
+                                            <system:String>Easy</system:String>
+                                        </col:ArrayList>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </materialDesign:MaterialDataGridComboBoxColumn>
+                                <DataGridTemplateColumn
+                                    CellEditingTemplate="{StaticResource EditingDateTemplate}"
+                                    CellTemplate="{StaticResource DateTemplate}"
+                                    Header="Dead Line"
+                                    SortMemberPath="DeadLine" />
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+                                        MaxWidth="350"
+                                        Text="{Binding Path=Note}"
+                                        TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                        <materialDesign:ColorZone
+                            Grid.Row="1"
+                            Height="44"
+                            VerticalAlignment="Bottom"
+                            Effect="{DynamicResource MaterialDesignShadowDepth5}"
+                            Mode="PrimaryMid">
+                            <TextBlock Margin="16">To do list</TextBlock>
+                        </materialDesign:ColorZone>
+                        <Button
+                            Grid.Row="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                            <Viewbox Width="22" Height="22">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                    </Grid>
+                </Border>
+            </materialDesign:DialogHost>
+        </Grid>
+        <ListView
+            x:Name="TabItem"
+            Grid.Row="1"
+            Grid.Column="0">
+            <ListViewItem>
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="BorderAll" Style="{StaticResource TaskListIcon}" />
+                    <TextBlock Style="{StaticResource ListDir}">All</TextBlock>
+                </StackPanel>
+            </ListViewItem>
+            <ListViewItem>
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="CalendarToday" Style="{StaticResource TaskListIcon}" />
+                    <TextBlock Style="{StaticResource ListDir}">Today</TextBlock>
+                </StackPanel>
+            </ListViewItem>
+            <ListViewItem>
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="CalendarText" Style="{StaticResource TaskListIcon}" />
+                    <TextBlock Style="{StaticResource ListDir}">Week</TextBlock>
+                </StackPanel>
+            </ListViewItem>
+            <Separator
+                Width="233"
+                Height="5"
+                Margin="0"
+                HorizontalAlignment="Left" />
+        </ListView>
+        <materialDesign:Snackbar
+            x:Name="MainSnackbar"
+            Grid.Row="1"
+            MessageQueue="{materialDesign:MessageQueue}" />
+    </Grid>
+</Window>
