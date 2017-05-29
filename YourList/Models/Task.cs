@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace YourList.Models
 {
@@ -43,6 +44,11 @@ namespace YourList.Models
                 }
                 return error;
             }
+        }
+
+        internal static Task<object> Delay(object p)
+        {
+            throw new NotImplementedException();
         }
     }
 }

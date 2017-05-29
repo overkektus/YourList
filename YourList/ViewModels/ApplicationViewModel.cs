@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using YourList.Commands;
 using YourList.Models;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
-using System.Threading;
+using System.Windows;
+using YourList.Views;
+using System;
 
 namespace YourList.ViewModels
 {
@@ -17,7 +13,17 @@ namespace YourList.ViewModels
     {
         private Task selectedTask;
         public User user;
-        public ObservableCollection<Task> TaskList { get; set; }
+        public ObservableCollection<Task> taskList;
+
+        public ObservableCollection<Task> TaskList
+        {
+            get { return taskList; }
+            set
+            {
+                taskList = value;
+                OnPropertyChanged("TaskList");
+            }
+        }
 
         public Task SelectedTask
         {
@@ -31,7 +37,7 @@ namespace YourList.ViewModels
 
         public ApplicationViewModel(int idUsr, string _login, string _password, string _img)
         {
-            TaskList = Database.GetTasks(idUsr);
+            TaskList = Database.GetTasks(idUsr, "sp_GetAllTask");
             user = new User(idUsr, _login, _password, _img);
         }
 
@@ -44,6 +50,134 @@ namespace YourList.ViewModels
         private static void ApplyBase(bool isDark)
         {
             new PaletteHelper().SetLightDark(isDark);
+        }
+
+        #region dialog
+
+        private RelayCommand runDialogCommand;
+        public RelayCommand RunDialogCommand => runDialogCommand ??
+                    (runDialogCommand = new RelayCommand(async obj =>
+                    {
+                        var view = new AddDialog
+                        {
+                            DataContext = new AddDialogViewModel(user, ref taskList)
+                        };
+
+                        var result = await DialogHost.Show(view, "RootDialog", ClosingEventHandler);
+                    }));
+
+        private void ClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
+        {
+            Console.WriteLine("You can intercept the closing event, and cancel here.");
+        }
+
+        
+        #endregion
+
+
+        private RelayCommand getAllTaskCommand;
+        public RelayCommand GetAllTaskCommand
+        {
+            get
+            {
+                return getAllTaskCommand ??
+                    (getAllTaskCommand = new RelayCommand(obj =>
+                    {
+                        TaskList.Clear();
+                        ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
+                        tmpList = Database.GetTasks(user.Id, "sp_GetAllTask");
+                        foreach(Task t in tmpList)
+                        {
+                            TaskList.Add(t);
+                        }
+                    }));
+            }
+        }
+
+        private RelayCommand getTodayTaskCommand;
+        public RelayCommand GetTodayTaskCommand
+        {
+            get
+            {
+                return getTodayTaskCommand ??
+                    (getTodayTaskCommand = new RelayCommand(obj =>
+                    {
+                        TaskList.Clear();
+                        ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
+                        tmpList = Database.GetTasks(user.Id, "sp_GetTodayTask");
+                        foreach (Task t in tmpList)
+                        {
+                            TaskList.Add(t);
+                        }
+                    }));
+            }
+        }
+
+        private RelayCommand getMonthTaskCommand;
+        public RelayCommand GetMonthTaskCommand
+        {
+            get
+            {
+                return getMonthTaskCommand ??
+                    (getMonthTaskCommand = new RelayCommand(obj =>
+                    {
+                        TaskList.Clear();
+                        ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
+                        tmpList = Database.GetTasks(user.Id, "sp_GetMonthTask");
+                        foreach (Task t in tmpList)
+                        {
+                            TaskList.Add(t);
+                        }
+                    }));
+            }
+        }
+
+        private RelayCommand getDoneTaskCommand;
+        public RelayCommand GetDoneTaskCommand
+        {
+            get
+            {
+                return getDoneTaskCommand ??
+                    (getDoneTaskCommand = new RelayCommand(obj =>
+                    {
+                        TaskList.Clear();
+                        ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
+                        tmpList = Database.GetTasks(user.Id, "sp_GetDoneTask");
+                        foreach (Task t in tmpList)
+                        {
+                            TaskList.Add(t);
+                        }
+                    }));
+            }
+        }
+
+        private RelayCommand addCommand;
+        public RelayCommand AddCommand
+        {
+            get
+            {
+                return addCommand ??
+                  (addCommand = new RelayCommand(obj =>
+                  {
+                      MessageBox.Show("kek");
+                  }));
+            }
+        }
+
+        private RelayCommand logOutCommand;
+        public RelayCommand LogOutCommand
+        {
+            get
+            {
+                return logOutCommand ??
+                    (logOutCommand = new RelayCommand(obj =>
+                    {
+                        Window mainwnd = obj as Window;
+                        mainwnd.Close();
+                        Auth auth = new Auth();
+                        auth.Show();
+                    }));
+            }
         }
 
         #endregion

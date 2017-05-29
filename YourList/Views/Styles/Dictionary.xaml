@@ -61,6 +61,7 @@
     <DataTemplate x:Key="DateTemplate">
         <DatePicker HorizontalAlignment="Left" Text="{Binding Path=DeadLine, StringFormat={}{0:dd.MM.yyyy}}" />
     </DataTemplate>
+
     <DataTemplate x:Key="EditingDateTemplate">
         <DatePicker SelectedDate="{Binding Path=DeadLine}" />
     </DataTemplate>

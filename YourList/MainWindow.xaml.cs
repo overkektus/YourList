@@ -27,15 +27,16 @@ namespace YourList
     /// </summary>
     public partial class MainWindow : Window
     {
+        int idUsr;
         public MainWindow()
         {
             InitializeComponent();
-            
         }
 
         public void Auth(int _id, string _login, string _password, string _img)
         {
             DataContext = new ApplicationViewModel(_id, _login, _password, _img);
+            idUsr = _id;
             SetCurrentUser(_login, _img);
             System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
@@ -50,7 +51,6 @@ namespace YourList
         private void SetCurrentUser(string _login, string _img)
         {
             Login.Text = _login;
-            //Avatar.Source = new BitmapImage(new Uri(Avatar.BaseUri, ""));
             var uriSource = new Uri(User.imgPath + _img, UriKind.Relative);
             Avatar.Source = new BitmapImage(uriSource);
         }
@@ -58,11 +58,6 @@ namespace YourList
         private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
         {
             this.Close();
-        }
-
-        private void ListViewItem_Selected(object sender, RoutedEventArgs e)
-        {
-            
         }
     }
 }

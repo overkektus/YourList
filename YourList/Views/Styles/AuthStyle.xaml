@@ -5,14 +5,4 @@
     xmlns:local="clr-namespace:YourList.Views.Styles"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
-    <Style TargetType="TextBox">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-</ResourceDictionary>
+    mc:Ignorable="d" />

@@ -13,6 +13,10 @@ namespace YourList.Models
 
         static public string imgPath = @"Img\";
 
+        public User()
+        {
+        }
+
         public User (int _id, string _login, string _password, string _img)
         {
             Id = _id;

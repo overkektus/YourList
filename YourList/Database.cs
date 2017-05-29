@@ -9,6 +9,7 @@ using System.Text;
 using System.Collections.Generic;
 using YourList.Models;
 using System.Collections.ObjectModel;
+using MaterialDesignThemes.Wpf;
 
 namespace YourList
 {
@@ -19,6 +20,7 @@ namespace YourList
         static private SqlCommand command;
         static private SqlConnection connection;
         static private DataTable dataTable;
+
 
         static Database()
         {
@@ -67,11 +69,6 @@ namespace YourList
             }
         }
 
-        static public void AddTask(string _Title, string _Note, string _Difficult, DateTime _DeadLine, DateTime? _Reminder = null)
-        {
-
-        }
-
         static public void CreateTables()
         {
             string str;
@@ -105,11 +102,8 @@ namespace YourList
             }
         }
 
-        public static ObservableCollection<Task> GetTasks(int idUsr)
+        public static ObservableCollection<Task> GetTasks(int idUsr, string sqlExpression)
         {
-            // название процедуры
-            string sqlExpression = "sp_GetAllTask";
-
             ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -133,10 +127,11 @@ namespace YourList
                 {
                     while (reader.Read())
                     {
+                        //Task s = new Task()
                         tmpList.Add(new Task(
-                            reader.GetBoolean(5),
+                            reader.GetBoolean(6),
                             reader.GetString(2),
-                            reader.GetString(6),
+                            reader.GetString(7),
                             reader.GetString(8),
                             reader.GetDateTime(3),
                             reader.GetDateTime(4)
@@ -151,6 +146,7 @@ namespace YourList
         public static List<User> GetUsers()
         {
             string sqlExpression = "sp_GetUsers";
+
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -178,7 +174,69 @@ namespace YourList
             }
         }
 
-        
+        public static void InsertTask(int idUsr, Task _task)
+        {
+            string sqlExpression = "sp_InsertTask";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(sqlExpression, connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                SqlParameter userIdParam = new SqlParameter
+                {
+                    ParameterName = "@userId",
+                    Value = idUsr
+                };
+                command.Parameters.Add(userIdParam);
+
+                SqlParameter titleParam = new SqlParameter
+                {
+                    ParameterName = "@title",
+                    Value = _task.Title
+                };
+                command.Parameters.Add(titleParam);
+
+                SqlParameter deadLineParam = new SqlParameter
+                {
+                    ParameterName = "@deadLine",
+                    Value = _task.DeadLine
+                };
+                command.Parameters.Add(deadLineParam);
+
+                SqlParameter reminderDate = new SqlParameter
+                {
+                    ParameterName = "@reminderDate",
+                    Value = _task.Reminder
+                };
+                command.Parameters.Add(reminderDate);
+
+                SqlParameter done = new SqlParameter
+                {
+                    ParameterName = "@done",
+                    Value = _task.Done
+                };
+                command.Parameters.Add(done);
+
+                SqlParameter note = new SqlParameter
+                {
+                    ParameterName = "@note",
+                    Value = _task.Note
+                };
+                command.Parameters.Add(note);
+
+                SqlParameter difficult = new SqlParameter
+                {
+                    ParameterName = "@difficult",
+                    Value = _task.Difficult
+                };
+                command.Parameters.Add(difficult);
+
+                var reader = command.ExecuteReader();
+                reader.Close();
+            }
+        }
 
         static public int Request(string _select, DataGrid _dataGrid = null) {
             dataTable = new DataTable();
