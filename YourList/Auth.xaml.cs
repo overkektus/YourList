@@ -14,6 +14,7 @@ namespace YourList
     public partial class Auth : Window
     {
         MainWindow mainWnd = new MainWindow();
+
         public Auth()
         {
             InitializeComponent();

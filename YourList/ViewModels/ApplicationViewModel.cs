@@ -11,9 +11,20 @@ namespace YourList.ViewModels
 {
     public class ApplicationViewModel : ViewModelBase
     {
+        public string currentHeader = "All";
         private Task selectedTask;
         public User user;
         public ObservableCollection<Task> taskList;
+
+        public string CurrentHeader
+        {
+            get { return currentHeader; }
+            set
+            {
+                currentHeader = value;
+                OnPropertyChanged("CurrentHeader");
+            }
+        }
 
         public ObservableCollection<Task> TaskList
         {
@@ -40,7 +51,6 @@ namespace YourList.ViewModels
             TaskList = Database.GetTasks(idUsr, "sp_GetAllTask");
             user = new User(idUsr, _login, _password, _img);
         }
-
 
         #region Commands
 
@@ -83,6 +93,7 @@ namespace YourList.ViewModels
                 return getAllTaskCommand ??
                     (getAllTaskCommand = new RelayCommand(obj =>
                     {
+                        CurrentHeader = obj as string;
                         TaskList.Clear();
                         ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
                         tmpList = Database.GetTasks(user.Id, "sp_GetAllTask");
@@ -102,6 +113,7 @@ namespace YourList.ViewModels
                 return getTodayTaskCommand ??
                     (getTodayTaskCommand = new RelayCommand(obj =>
                     {
+                        CurrentHeader = obj as string;
                         TaskList.Clear();
                         ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
                         tmpList = Database.GetTasks(user.Id, "sp_GetTodayTask");
@@ -121,6 +133,7 @@ namespace YourList.ViewModels
                 return getMonthTaskCommand ??
                     (getMonthTaskCommand = new RelayCommand(obj =>
                     {
+                        CurrentHeader = obj as string;
                         TaskList.Clear();
                         ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
                         tmpList = Database.GetTasks(user.Id, "sp_GetMonthTask");
@@ -140,6 +153,7 @@ namespace YourList.ViewModels
                 return getDoneTaskCommand ??
                     (getDoneTaskCommand = new RelayCommand(obj =>
                     {
+                        CurrentHeader = obj as string;
                         TaskList.Clear();
                         ObservableCollection<Task> tmpList = new ObservableCollection<Task>();
                         tmpList = Database.GetTasks(user.Id, "sp_GetDoneTask");

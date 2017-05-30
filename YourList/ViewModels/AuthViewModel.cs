@@ -1,19 +1,16 @@
-﻿using System;
+﻿using System.Windows;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using YourList.Commands;
 using YourList.Models;
-using YourList;
-using System.Windows;
 using System.Windows.Controls;
+using System.IO;
+using System.Linq;
 
 namespace YourList.ViewModels
 {
     public class AuthViewModel : ViewModelBase
     {
+
         public Auth authwnd;
         private string login;
         private string password;
@@ -21,6 +18,16 @@ namespace YourList.ViewModels
         public AuthViewModel(Auth _authwnd)
         {
             authwnd = _authwnd;
+
+            CreateImgDir();
+        }
+
+        public void CreateImgDir()
+        {
+            string currentDir = Directory.GetCurrentDirectory();
+            string[] imgDir = Directory.GetDirectories(currentDir, "Img");
+            if (imgDir.Count() == 0)
+                Directory.CreateDirectory(currentDir + "/Img");
         }
 
         public string Login
@@ -85,7 +92,6 @@ namespace YourList.ViewModels
                             }
                             else
                             {
-
                             }
                         }
                     }));

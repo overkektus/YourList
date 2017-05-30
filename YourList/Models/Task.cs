@@ -1,25 +1,33 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace YourList.Models
 {
-    public class Task
+    public class Task : INotifyPropertyChanged
     {
         public bool Done { get; set; }
         public string Title { get; set; }
         public string Note { get; set; }
         public string Difficult { get; set; }
         public DateTime DeadLine { get; set; }
-        public DateTime? Reminder { get; set; }
+        public DateTime? ReminderTime { get; set; }
+        public DateTime? ReminderDate { get; set; }
+        //public DateTime? Reminder { get; set; }
 
-        public Task(bool done, string title, string note, string difficult, DateTime deadLine, DateTime? reminder = null)
+        public Task(bool done, string title, string note, string difficult, DateTime deadLine,
+            //DateTime? reminder = null,
+            DateTime? reminderTime = null, DateTime? reminderDate = null)
         {
-            this.Done = done;
-            this.Title = title;
-            this.Note = note;
-            this.Difficult = difficult;
-            this.DeadLine = deadLine;
-            this.Reminder = reminder;
+            Done = done;
+            Title = title;
+            Note = note;
+            Difficult = difficult;
+            DeadLine = deadLine;
+            ReminderTime = reminderTime;
+            ReminderDate = reminderDate;
+            //this.Reminder = reminder;
         }
 
         public string this[string columnName]
@@ -49,6 +57,13 @@ namespace YourList.Models
         internal static Task<object> Delay(object p)
         {
             throw new NotImplementedException();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

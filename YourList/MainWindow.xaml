@@ -67,9 +67,8 @@
                     Margin="15,0,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Style="{StaticResource MaterialDesignTitleTextBlock}">
-                    All
-                </TextBlock>
+                    Style="{StaticResource MaterialDesignTitleTextBlock}"
+                    Text="{Binding CurrentHeader}" />
                 <StackPanel
                     Grid.Column="1"
                     HorizontalAlignment="Right"
@@ -131,6 +130,7 @@
             Grid.Row="1"
             Grid.Column="1">
             <materialDesign:ColorZone
+                x:Name="TrackingElement"
                 Grid.Row="1"
                 Grid.Column="1"
                 Padding="16"
@@ -208,18 +208,18 @@
                         GridLinesVisibility="Horizontal"
                         HorizontalGridLinesBrush="{DynamicResource PrimaryHueLightBrush}"
                         IsReadOnly="False"
-                        ItemsSource="{Binding TaskList}"
+                        ItemsSource="{Binding TaskList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource DataGrid}">
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn
                                 Width="40"
                                 MinWidth="40"
-                                Binding="{Binding Path=Done}"
+                                Binding="{Binding Path=Done, Mode=TwoWay}"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" />
                             <materialDesign:MaterialDataGridTextColumn
                                 MinWidth="312"
-                                Binding="{Binding Path=Title}"
+                                Binding="{Binding Path=Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"
                                 Header="Title"
                                 MaxLength="40">
@@ -232,7 +232,7 @@
                             <materialDesign:MaterialDataGridComboBoxColumn
                                 MinWidth="72"
                                 Header="Difficult"
-                                SelectedItemBinding="{Binding Path=Difficult}">
+                                SelectedItemBinding="{Binding Path=Difficult, Mode=TwoWay}">
                                 <materialDesign:MaterialDataGridComboBoxColumn.ElementStyle>
                                     <Style TargetType="ComboBox">
                                         <Setter Property="VerticalAlignment" Value="Center" />
@@ -252,13 +252,23 @@
                                 CellTemplate="{StaticResource DateTemplate}"
                                 Header="Dead Line"
                                 SortMemberPath="DeadLine" />
+                            <DataGridTemplateColumn
+                                CellEditingTemplate="{StaticResource EditingReminderDateTemplate}"
+                                CellTemplate="{StaticResource ReminderDateTemplate}"
+                                Header="Reminder Date"
+                                SortMemberPath="ReminderDate" />
+                            <DataGridTemplateColumn
+                                CellEditingTemplate="{StaticResource EditingTimeTemplate}"
+                                CellTemplate="{StaticResource TimeTmplate}"
+                                Header="Reminder Time"
+                                SortMemberPath="ReminderTime" />
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
                                 <TextBlock
                                     MaxWidth="350"
                                     Padding="0,5,0,5"
-                                    Text="{Binding Path=Note}"
+                                    Text="{Binding Path=Note, Mode=TwoWay}"
                                     TextWrapping="Wrap" />
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
@@ -296,6 +306,7 @@
                     Width="250"
                     Margin="0,5,0,5"
                     Command="{Binding GetAllTaskCommand}"
+                    CommandParameter="All"
                     Style="{StaticResource MaterialDesignFlatButton}">
                     <Button.Content>
                         <Grid Width="222">
@@ -323,6 +334,7 @@
                     Width="250"
                     Margin="0,5,0,5"
                     Command="{Binding GetTodayTaskCommand}"
+                    CommandParameter="Today"
                     Style="{StaticResource MaterialDesignFlatButton}">
                     <Button.Content>
                         <Grid Width="222">
@@ -350,6 +362,7 @@
                     Width="250"
                     Margin="0,5,0,5"
                     Command="{Binding GetMonthTaskCommand}"
+                    CommandParameter="Month"
                     Style="{StaticResource MaterialDesignFlatButton}">
                     <Button.Content>
                         <Grid Width="222">
@@ -382,6 +395,7 @@
                     Width="250"
                     Margin="0,5,0,5"
                     Command="{Binding GetDoneTaskCommand}"
+                    CommandParameter="Doned"
                     Style="{StaticResource MaterialDesignFlatButton}">
                     <Button.Content>
                         <Grid Width="222">

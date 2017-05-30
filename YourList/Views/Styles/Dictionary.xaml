@@ -66,4 +66,20 @@
         <DatePicker SelectedDate="{Binding Path=DeadLine}" />
     </DataTemplate>
 
+    <DataTemplate x:Key="TimeTmplate">
+        <materialDesign:TimePicker Text="{Binding Path=ReminderTime, Mode=TwoWay, StringFormat={}{0:HH:mm}}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="EditingTimeTemplate">
+        <materialDesign:TimePicker />
+    </DataTemplate>
+
+    <DataTemplate x:Key="ReminderDateTemplate">
+        <DatePicker HorizontalAlignment="Left" Text="{Binding Path=ReminderDate, Mode=TwoWay, StringFormat={}{0:dd.MM.yyyy}}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="EditingReminderDateTemplate">
+        <DatePicker SelectedDate="{Binding Path=ReminderDate, Mode=TwoWay}" />
+    </DataTemplate>
+
 </ResourceDictionary>

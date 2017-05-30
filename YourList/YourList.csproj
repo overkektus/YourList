@@ -78,8 +78,11 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="ToastNotifications, Version=2.1.2.0, Culture=neutral, PublicKeyToken=e89d9d7314a7c797, processorArchitecture=MSIL">
-      <HintPath>..\packages\ToastNotifications.2.1.2\lib\net452\ToastNotifications.dll</HintPath>
+    <Reference Include="ToastNotifications, Version=2.1.3.0, Culture=neutral, PublicKeyToken=e89d9d7314a7c797, processorArchitecture=MSIL">
+      <HintPath>..\packages\ToastNotifications.2.1.3\lib\net452\ToastNotifications.dll</HintPath>
+    </Reference>
+    <Reference Include="ToastNotifications.Messages, Version=2.1.3.0, Culture=neutral, PublicKeyToken=e89d9d7314a7c797, processorArchitecture=MSIL">
+      <HintPath>..\packages\ToastNotifications.Messages.2.1.3\lib\net452\ToastNotifications.Messages.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -106,10 +109,14 @@
     </Compile>
     <Compile Include="ViewModels\AddDialogViewModel.cs" />
     <Compile Include="ViewModels\AnotherCommandImplementation.cs" />
+    <Compile Include="ViewModels\NotifyViewModel.cs" />
     <Compile Include="ViewModels\RegistrationViewModel.cs" />
     <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\AuthViewModel.cs" />
+    <Compile Include="ViewModels\Utilities\EnumBooleanConverter.cs" />
+    <Compile Include="ViewModels\Utilities\NotificationLifetimeType.cs" />
+    <Compile Include="ViewModels\Utilities\PositionProviderType.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AddDialog.xaml.cs">
       <DependentUpon>AddDialog.xaml</DependentUpon>
@@ -192,15 +199,13 @@
     <Resource Include="Views\Img\homework.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Img\dima.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Img\default.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Img\addimage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\Egor\Desktop\DesktopToast-master\DesktopToast\DesktopToast.csproj">
+      <Project>{b8d704d5-fb0c-4c2d-8189-72c6649ba157}</Project>
+      <Name>DesktopToast</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

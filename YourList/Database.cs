@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using YourList.Models;
 using System.Collections.ObjectModel;
 using MaterialDesignThemes.Wpf;
+using System.Linq;
 
 namespace YourList
 {
@@ -174,6 +175,42 @@ namespace YourList
             }
         }
 
+        public static void Registration(User regUsr)
+        {
+            string sqlExpression = "sp_Registration";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(sqlExpression, connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                SqlParameter regUsrLoginParam = new SqlParameter
+                {
+                    ParameterName = "@login",
+                    Value = regUsr.Login
+                };
+                command.Parameters.Add(regUsrLoginParam);
+
+                SqlParameter regUsrPasswordParam = new SqlParameter
+                {
+                    ParameterName = "@password",
+                    Value = regUsr.Password
+                };
+                command.Parameters.Add(regUsrPasswordParam);
+
+                SqlParameter regUsrImgParam = new SqlParameter
+                {
+                    ParameterName = "@img",
+                    Value = regUsr.Img
+                };
+                command.Parameters.Add(regUsrImgParam);
+
+                var reader = command.ExecuteReader();
+                reader.Close();
+            }
+        }
+
         public static void InsertTask(int idUsr, Task _task)
         {
             string sqlExpression = "sp_InsertTask";
@@ -184,12 +221,14 @@ namespace YourList
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
                 command.CommandType = System.Data.CommandType.StoredProcedure;
 
+
                 SqlParameter userIdParam = new SqlParameter
                 {
                     ParameterName = "@userId",
                     Value = idUsr
                 };
                 command.Parameters.Add(userIdParam);
+
 
                 SqlParameter titleParam = new SqlParameter
                 {
@@ -198,6 +237,7 @@ namespace YourList
                 };
                 command.Parameters.Add(titleParam);
 
+
                 SqlParameter deadLineParam = new SqlParameter
                 {
                     ParameterName = "@deadLine",
@@ -205,12 +245,32 @@ namespace YourList
                 };
                 command.Parameters.Add(deadLineParam);
 
+
+                SqlParameter reminderDate = new SqlParameter
+                {
+                    ParameterName = "@reminderDate",
+                    Value = _task.ReminderDate
+                };
+                command.Parameters.Add(reminderDate);
+
+
+                SqlParameter reminderTime = new SqlParameter
+                {
+                    ParameterName = "@reminderTime",
+                    Value = _task.ReminderTime
+                };
+                command.Parameters.Add(reminderTime);
+
+
+                /*
                 SqlParameter reminderDate = new SqlParameter
                 {
                     ParameterName = "@reminderDate",
                     Value = _task.Reminder
                 };
                 command.Parameters.Add(reminderDate);
+                */
+
 
                 SqlParameter done = new SqlParameter
                 {
@@ -219,12 +279,14 @@ namespace YourList
                 };
                 command.Parameters.Add(done);
 
+
                 SqlParameter note = new SqlParameter
                 {
                     ParameterName = "@note",
                     Value = _task.Note
                 };
                 command.Parameters.Add(note);
+
 
                 SqlParameter difficult = new SqlParameter
                 {

@@ -28,6 +28,7 @@ namespace YourList
     public partial class MainWindow : Window
     {
         int idUsr;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -51,13 +52,28 @@ namespace YourList
         private void SetCurrentUser(string _login, string _img)
         {
             Login.Text = _login;
-            var uriSource = new Uri(User.imgPath + _img, UriKind.Relative);
-            Avatar.Source = new BitmapImage(uriSource);
+
+            BitmapImage B = new BitmapImage();
+            B.BeginInit();
+            B.UriSource = new Uri(User.imgPath + _img, UriKind.Relative);
+            Avatar.Source = B;
+            B.EndInit();
+
+            //var uriSource = new Uri(User.imgPath + _img, UriKind.Relative);
+            //Avatar.Source = new BitmapImage(uriSource);
+
+            /*
+            BitmapImage B = new BitmapImage();
+            B.BeginInit();
+            B.UriSource = new Uri(path);
+            regwnd.Avatar.Source = B;
+            B.EndInit();
+             */
         }
 
         private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            this.Close();
+        this.Close();
         }
     }
 }

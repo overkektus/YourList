@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using YourList.Models;
 using YourList.Commands;
-using System.Windows;
 
 namespace YourList.ViewModels
 {
@@ -15,7 +11,7 @@ namespace YourList.ViewModels
 
         public TaskViewModel(Task task)
         {
-            this.Task = task;
+            Task = task;
         }
 
         public bool Done
@@ -27,6 +23,7 @@ namespace YourList.ViewModels
                 OnPropertyChanged("Done");
             }
         }
+
         public string Title
         {
             get { return Task.Title; }
@@ -36,6 +33,7 @@ namespace YourList.ViewModels
                 OnPropertyChanged("Title");
             }
         }
+
         public string Note
         {
             get { return Task.Note; }
@@ -45,6 +43,7 @@ namespace YourList.ViewModels
                 OnPropertyChanged("Note");
             }
         }
+
         public string Difficult
         {
             get { return Task.Difficult; }
@@ -54,6 +53,7 @@ namespace YourList.ViewModels
                 OnPropertyChanged("Difficult");
             }
         }
+
         public DateTime DeadLine
         {
             get { return Task.DeadLine; }
@@ -63,6 +63,28 @@ namespace YourList.ViewModels
                 OnPropertyChanged("DeadLine");
             }
         }
+
+        public DateTime? ReminderTime
+        {
+            get { return Task.ReminderTime; }
+            set
+            {
+                Task.ReminderTime = value;
+                OnPropertyChanged("ReminderTime");
+            }
+        }
+
+        public DateTime? ReminderDate
+        {
+            get { return Task.ReminderDate; }
+            set
+            {
+                Task.ReminderDate = value;
+                OnPropertyChanged("ReminderDate");
+            }
+        }
+
+        /*
         public DateTime? Reminder
         {
             get { return Task.Reminder; }
@@ -72,6 +94,7 @@ namespace YourList.ViewModels
                 OnPropertyChanged("Reminder");
             }
         }
+        */
 
         private DelegateCommand addTaskCommand;
 
